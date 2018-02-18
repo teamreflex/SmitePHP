@@ -11,6 +11,7 @@ use GuzzleHttp\Exception\TransferException;
 use Reflex\Smite\Exceptions\AccessValidationException;
 use Reflex\Smite\Exceptions\NotFoundException;
 use Reflex\Smite\Exceptions\RateLimitException;
+use Reflex\Smite\Exceptions\InternalServerException;
 
 /**
  * Class to manage individual requests to the Smite API
@@ -268,6 +269,8 @@ class Request {
                 throw new AccessValidationException($message, $e->getCode(), $e);
             } elseif (strpos($message, '404 Not Found') !== false) {
                 throw new NotFoundException($message, $e->getCode(), $e);
+            } elseif (strpos($message, '500 Internal Server Error') !== false) {
+            	throw new InternalServerException($message, $e->getCode(), $e);
             } else {
                 throw new ApiException($message, $e->getCode(), $e);
             }
